@@ -20,8 +20,9 @@ class AdminController extends Controller
         $transactions = collect($this->database->getReference('transactions')->getValue() ?? []);
         $reports = collect($this->database->getReference('reports')->getValue() ?? []);
 
-        $totalUsers = $users->count();
-        $totalProducts = $products->count();
+        $totalUsers = is_array($users->toArray()) ? count($users->toArray()) : 0;
+
+        $totalProducts = is_array($products->toArray()) ? count($products->toArray()) : 0;
 
         $pendingProducts = $products->where('status', 'Pending')->count();
 
@@ -33,7 +34,7 @@ class AdminController extends Controller
             return strtolower($product['status'] ?? '') === 'sold';
         })->count();
 
-        $totalTransactions = $transactions->count();
+        $totalTransactions = is_array($transactions->toArray()) ? count($transactions->toArray()) : 0;
 
         $totalReports = $reports->filter(function ($report) {
             return strtolower($report['status'] ?? '') === 'pending';
